@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="ISO-8859-1" />
+    <title>Insert title here</title>
+  </head>
+  <body>
+    <h2>Login</h2>
+    <br />
+    <form onsubmit="return login()">
+      email:<input id="email" type="text" name="email" required /><br />
+      Password:
+      <input id="password" type="password" name="password" required /><br />
+      <button type="submit">Log In</button>
+    </form>
+    <p id="error-msg" style="color: red"></p>
+    <script src="js/ajax.js"></script>
+    <script>
+      function login() {
+        event.preventDefault();
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        var formData = "email=" + email + "&" + "password=" + password;
+        var response;
+        loginAPI(formData, function(response) {
+          console.log(response);
+          try {
+            var user = JSON.parse(response);
+            localStorage.setItem("LOGGED_USER", JSON.stringify(user));
+            if (user.type == "MAN") {
+              window.location = "Manager.html";
+            } else if (user.type == "EMP") {
+              window.location = "Employee.html";
+            }
+          } catch (err) {
+            document.getElementById("error-msg").innerText = `${response}`;
+          }
+        });
+        return false;
+      }
+
+      function loginAPI(formData,callback){
+        ajaxPOST("login.do", formData).then(function(response) {
+          console.log(response);
+          callback(response);
+        });
+      }
+    </script>
+  </body>
+</html>

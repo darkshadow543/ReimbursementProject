@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="ISO-8859-1" />
+    <title>Employee</title>
+    <script src="js/ajax.js"></script>
+    <script>
+      function getName() {
+        user = JSON.parse(localStorage.getItem("LOGGED_USER"));
+        document.getElementById("name").innerText = `Welcome ${user.fName} ${
+          user.lName}`;
+      }
+    </script>
+  </head>
+  <body>
+    <nav>
+      <button onclick="logout()">Logout</button>
+    </nav>
+    <h4 id="name" onload="getName()">PlaceHolder</h4>
+    <script>
+      function logout() {
+        console.log("logout run");
+        url = "logout.do";
+        ajaxGET(url, "").then(function(response) {
+          localStorage.removeItem("LOGGED_USER");
+          window.location = "login.html";
+        });
+      }
+    </script>
+  </body>
+</html>
