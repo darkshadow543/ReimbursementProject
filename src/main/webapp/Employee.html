@@ -16,7 +16,26 @@
     <nav>
       <button onclick="logout()">Logout</button>
     </nav>
-    <h4 id="name" onload="getName()">PlaceHolder</h4>
+    <h4 id="name" onload="getName()">Welcome Employee</h4>
+    <div>
+      <h3>Place a Request</h3>
+      <form>
+        Ammount: <input type="number" name="ammount"/><br>
+        Reason: <input type="text" name="reason"/>
+      </form>
+    </div>
+    <div>
+      <h3>Update Information</h3>
+      <form>
+        First Name:<input type="text" name="fname"/><br>
+        Last Name:<input type="text" name="lname"/><br>
+      </form>
+    </div>
+    <div>
+      <table id = "requests">
+        
+      </table>
+    </div>
     <script>
       function logout() {
         console.log("logout run");
