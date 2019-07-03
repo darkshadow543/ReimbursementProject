@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.revature.project1.dao.DAO;
 import com.revature.project1.dao.UserOracle;
-import com.revature.project1.reimbursement.Request;
+import com.revature.project1.request.Request;
 import com.revature.project1.util.exception.IncorrectLoginException;
 import com.revature.project1.util.exception.NoAccessException;
 

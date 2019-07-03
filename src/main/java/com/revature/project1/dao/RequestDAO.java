@@ -2,7 +2,7 @@ package com.revature.project1.dao;
 
 import java.util.ArrayList;
 
-import com.revature.project1.reimbursement.Request;
+import com.revature.project1.request.Request;
 
 public interface RequestDAO extends ChildTableDAO<Request> {
 	public ArrayList<Request> getAllPending() throws Exception;

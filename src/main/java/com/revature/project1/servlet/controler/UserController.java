@@ -77,6 +77,8 @@ public class UserController {
 				response.getWriter().write(e.getMessage());
 				response.getWriter().flush();
 			}
+			response.getWriter().write("Information updatd sucessfully.");
+			response.getWriter().flush();
 		}
 	}
 	

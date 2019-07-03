@@ -1,6 +1,6 @@
 package com.revature.project1.validator;
 
-import com.revature.project1.reimbursement.Request;
+import com.revature.project1.request.Request;
 
 public class RequestValidator {
 

@@ -6,8 +6,8 @@ import com.revature.project1.dao.DAO;
 import com.revature.project1.dao.RequestDAO;
 import com.revature.project1.dao.RequestOracle;
 import com.revature.project1.dao.UserOracle;
-import com.revature.project1.reimbursement.Request;
-import com.revature.project1.reimbursement.Status;
+import com.revature.project1.request.Request;
+import com.revature.project1.request.Status;
 import com.revature.project1.util.exception.NoAccessException;
 import com.revature.project1.validator.RequestValidator;
 

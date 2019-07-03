@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
-import com.revature.project1.reimbursement.Request;
-import com.revature.project1.reimbursement.Status;
+import com.revature.project1.request.Request;
+import com.revature.project1.request.Status;
 import com.revature.project1.util.ConnectionUtil;
 
 public class RequestOracle implements RequestDAO{

@@ -6,8 +6,8 @@ import com.revature.project1.dao.EmployeeAODAO;
 import com.revature.project1.dao.EmployeeOracleAO;
 import com.revature.project1.dao.RequestDAO;
 import com.revature.project1.dao.RequestOracle;
-import com.revature.project1.reimbursement.Request;
-import com.revature.project1.reimbursement.Status;
+import com.revature.project1.request.Request;
+import com.revature.project1.request.Status;
 import com.revature.project1.util.exception.NoAccessException;
 
 public class Manager extends User {

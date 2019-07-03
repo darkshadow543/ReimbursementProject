@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 import com.google.gson.Gson;
 import com.revature.project1.dao.DAO;
 import com.revature.project1.dao.RequestOracle;
-import com.revature.project1.reimbursement.Request;
-import com.revature.project1.reimbursement.Status;
+import com.revature.project1.request.Request;
+import com.revature.project1.request.Status;
 import com.revature.project1.user.Manager;
 import com.revature.project1.user.User;
 import com.revature.project1.util.exception.NoAccessException;
@@ -34,11 +34,13 @@ public class RequestController {
 		try {
 			RequestValidator.validateRequest(req);
 			dao.insertInto(req);
-			response.getWriter().write("Response successfully Submited");
+			response.getWriter().write("Request successfully submited");
+			response.getWriter().flush();
 		} catch (Exception e) {
 			response.getWriter().write(e.getMessage());
 			response.getWriter().flush();
 		}
+		
 	}
 	
 	public static void getPending(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -122,6 +124,8 @@ public class RequestController {
 			response.getWriter().flush();
 			return;
 		}
+		response.getWriter().write("Response successfully submited");
+		response.getWriter().flush();
 	}
 	
 	public static void getEmpRequests(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
