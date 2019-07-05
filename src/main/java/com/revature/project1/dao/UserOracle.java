@@ -95,7 +95,6 @@ public class UserOracle implements DAO<User>{
 				query.setString(3, object.getLName());
 				query.setString(4, object.getPassword().toString());
 				query.execute();
-				query.close();
 				if (object instanceof Employee) {
 					sql = "INSERT INTO EMPLOYEE (EMAIL) VALUES (?)";
 					query = con.prepareStatement(sql);
@@ -113,7 +112,6 @@ public class UserOracle implements DAO<User>{
 			log.error("Unable to execute sql query", e);
 			throw new Exception("Unable to connect to database");
 		}
-
 	}
 
 	public User getByID(String key) throws Exception {
@@ -156,19 +154,8 @@ public class UserOracle implements DAO<User>{
 		} catch (SQLException e) {
 			log.error("Unable to execute sql query", e);
 			throw new Exception("Unable to connect to database");
-		}
+		} 
 		return null;
-	}
-
-	public static void main(String[] args) throws Exception {
-		DAO<User> test = new UserOracle();
-		Manager u1 = new Manager("sbengel@hotmail.com", "20Dodger15", "Shannon", "Bengel", 0);
-		Employee u2 = new Employee("starplatinum@gmail.com", "YareYareDaz3", "Jotaro", "Joestar", 1);
-		test.insertInto(u1);
-		test.insertInto(u2);
-		System.out.println(test.getAll());
-		System.out.println(test.getByID("sbengel@hotmail.com"));
-		System.out.println(test.getByID("starplatinum@gmail.com"));
 	}
 	
 }

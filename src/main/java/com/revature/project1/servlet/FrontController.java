@@ -28,6 +28,7 @@ public class FrontController extends HttpServlet {
 		String requestURI = request.getRequestURI();
 		String context = request.getContextPath();
 		String path = requestURI.substring(context.length());
+		System.out.println(path);
 		switch(path) {
 		case "/login.do":
 			UserController.login(request, response);
@@ -57,8 +58,9 @@ public class FrontController extends HttpServlet {
 			RequestController.resolve(request, response);
 			break;
 		default:
-			RequestDispatcher dispatcher = request.getRequestDispatcher("login.html");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("index.html");
 			dispatcher.forward(request, response);
+			break;
 		}
 	}
 	

@@ -8,42 +8,143 @@
       function getName() {
         user = JSON.parse(localStorage.getItem("LOGGED_USER"));
         document.getElementById("name").innerText = `Welcome ${user.fName} ${
-          user.lName}`;
+          user.lName
+        }`;
       }
     </script>
   </head>
-  <body>
+  <body onload="getName(); getPending();">
     <nav>
       <button onclick="logout()">Logout</button>
     </nav>
-    <h4 id="name" onload="getName()">Welcome Employee</h4>
+    <h4 id="name">Welcome Employee</h4>
     <div>
       <h3>Place a Request</h3>
-      <form>
-        Ammount: <input type="number" name="ammount"/><br>
-        Reason: <input type="text" name="reason"/>
+      <form onsubmit="submitReq(ammount, reason)">
+        Ammount: <input type="number" name="ammount" /><br />
+        Reason: <input type="text" name="reason" />
+        <button type="submit">Submit</button>
       </form>
     </div>
     <div>
       <h3>Update Information</h3>
-      <form>
-        First Name:<input type="text" name="fname"/><br>
-        Last Name:<input type="text" name="lname"/><br>
+      <form onsubmit="updateData(fname,lname)">
+        First Name:<input type="text" name="fname" /><br />
+        Last Name:<input type="text" name="lname" /><br />
+        <button type="submit">Submit</button>
       </form>
     </div>
     <div>
-      <table id = "requests">
-        
+      <h3>Requests</h3>
+      <button onclick="getPending()">See Pending</button>
+      <button onclick="getResolved()">See Resolved</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Ammount</th>
+            <th>Reason</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="requests"></tbody>
       </table>
     </div>
     <script>
+      isPending = false;
+      isResolved = false;
+
       function logout() {
         console.log("logout run");
         url = "logout.do";
-        ajaxGET(url, "").then(function(response) {
-          localStorage.removeItem("LOGGED_USER");
-          window.location = "login.html";
+        ajaxGET(url, "");
+        window.location("index.html");
+        localStorage.removeItem("LOGGED_USER");
+        window.location = "index.html";
+      }
+
+      function updateData(fname, lname) {
+        let user = JSON.parse(localStorage.getItem("LOGGED_USER"));
+        formData = "fname=" + fname.value + "&lname=" + lname.value;
+        url = "updateinfo.do";
+        ajaxPOST(url, formData).then(function(response) {
+          alert(response);
+          if ((response = "Information updated sucessfully.")) {
+            if (fname.value != "") user.fName = fname;
+            if (lname.value != "") user.lName = lname;
+            localStorage.setItem("LOGGED_USER", JSON.stringify(user));
+            getName();
+          }
         });
+      }
+
+      function submitReq(ammount, reason) {
+        let user = JSON.parse(localStorage.getItem("LOGGED_USER"));
+        let formData =
+          "id=" +
+          user.id +
+          "&ammount=" +
+          ammount.value +
+          "&reason=" +
+          reason.value;
+        url = "makerequest.do";
+        ajaxPOST(url, formData).then(function(response) {
+          alert(response);
+          if (isPending) {
+            getPending();
+          } else if (isResolved) {
+            getResolved();
+          }
+        });
+      }
+
+      function getPending() {
+        url = "getpending.do";
+        ajaxPOST(url, "").then(function(response) {
+          try {
+            let reqs = JSON.parse(response);
+            fillReqTable(reqs);
+            isPending = true;
+            isResolved = false;
+          } catch (err) {
+            alert(response);
+          }
+        });
+      }
+
+      function getResolved() {
+        url = "getresolved.do";
+        ajaxPOST(url, "").then(function(response) {
+          try {
+            let reqs = JSON.parse(response);
+            fillReqTable(reqs);
+            isPending = false;
+            isResolved = true;
+          } catch (err) {
+            alert(response);
+          }
+        });
+      }
+
+      function fillReqTable(reqs) {
+        var table = document.getElementById("requests");
+        table.innerHTML = "";
+        var content = "";
+        for (let req of reqs) {
+          var row =
+            "<tr><td>" +
+            req.amount +
+            "</td><td>" +
+            req.reason +
+            "</td><td>" +
+            req.status +
+            "</td><td>" +
+            req.EMP_ID +
+            "</td><td>" +
+            req.time +
+            "</td></tr>";
+          content += row;
+        }
+        table.innerHTML = content;
       }
     </script>
   </body>

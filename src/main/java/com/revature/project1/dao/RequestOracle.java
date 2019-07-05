@@ -228,7 +228,7 @@ public class RequestOracle implements RequestDAO{
 		PreparedStatement query;
 		ArrayList<Request> list = new ArrayList<Request>();
 		try {
-			sql = "SELECT * FROM REQUEST WHERE EMP_ID = ? AND  WHERE RESOLVED = 'PENDING'";
+			sql = "SELECT * FROM REQUEST WHERE EMP_ID = ? AND RESOLVED = 'PENDING'";
 			query = con.prepareStatement(sql);
 			query.setInt(1, key);
 			ResultSet ret = query.executeQuery();

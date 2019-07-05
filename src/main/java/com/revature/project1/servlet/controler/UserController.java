@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.revature.project1.dao.DAO;
 import com.revature.project1.dao.UserOracle;
 import com.revature.project1.user.Employee;
@@ -39,12 +38,12 @@ public class UserController {
 			ret = User.login(email, password);
 			String json = JSONParser.toJson(ret);
 			
-	        out.write(json.toString());
-	        out.flush();
-	        
 			HttpSession session = request.getSession(true);
 			session.setAttribute("USER", ret);
 			session.setMaxInactiveInterval(30 * 60);
+	        
+			out.write(json.toString());
+	        out.flush();
 		} catch (IncorrectLoginException e) {
 			out.write(e.getMessage());
 			out.flush();
@@ -69,15 +68,22 @@ public class UserController {
 			response.getWriter().write("You must be logged in to use this function");
 			response.getWriter().flush();
 		} else {
-			JsonObject userJson = (JsonObject) request.getAttribute("user");
-			Employee emp = JSONParser.fromJson(userJson, Employee.class);
+			String fName = request.getParameter("fname");
+			String lName = request.getParameter("lname");
+			Employee old_emp = (Employee) session.getAttribute("USER");
+			if (fName != "" && fName != null) {
+				old_emp.setFName(fName);
+			}
+			if (lName != "" && lName != null) {
+				old_emp.setLName(lName);
+			}
 			try {
-				dao.insertInto(emp);
+				dao.insertInto(old_emp);
 			} catch (Exception e) {
 				response.getWriter().write(e.getMessage());
 				response.getWriter().flush();
 			}
-			response.getWriter().write("Information updatd sucessfully.");
+			response.getWriter().write("Information updated sucessfully.");
 			response.getWriter().flush();
 		}
 	}
@@ -101,7 +107,7 @@ public class UserController {
 		try {
 			list = emp.getAllEmployees();
 		} catch (Exception e) {
-			response.getWriter().write(e.getMessage());
+			response.getWriter().write("There was trouble in reaching the employees");
 			response.getWriter().flush();
 			return;
 		}

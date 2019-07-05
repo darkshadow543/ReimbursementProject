@@ -114,11 +114,13 @@ public class RequestController {
 			response.getWriter().flush();
 			return;
 		}
-		int id = Integer.parseInt(request.getParameter("id"));
+		String id = request.getParameter("id");
+		System.out.println(id);
 		try {
-			Request req = dao.getByID(Integer.toString(id));
+			Request req = dao.getByID(id);
 			String status = request.getParameter("status");
 			req.setStatus(Request.getStatusFromString(status));
+			dao.insertInto(req);
 		} catch (Exception e) {
 			response.getWriter().write(e.getMessage());
 			response.getWriter().flush();
@@ -143,7 +145,9 @@ public class RequestController {
 			response.getWriter().flush();
 			return;
 		}
-		int id = Integer.parseInt(request.getParameter("id"));
+		String idString = request.getParameter("id");
+		System.out.println(idString);
+		int id = Integer.parseInt(idString);
 		ArrayList<Request> list;
 		try {
 			list = emp.getEmployeeRequests(id);

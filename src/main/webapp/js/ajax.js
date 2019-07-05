@@ -1,5 +1,4 @@
 function ajaxGET(url, formData) {
-    console.log(formData);
     var promiseObj = new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
@@ -18,7 +17,6 @@ function ajaxGET(url, formData) {
 }
 
 function ajaxPOST(url, formData) {
-    console.log(formData);
     var promiseObj = new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();        
         

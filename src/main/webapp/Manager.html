@@ -5,32 +5,187 @@
     <title>Manager</title>
 
     <script src="js/ajax.js"></script>
+
     <script>
       function getName() {
-        user = JSON.parse(localStorage.getItem("LOGGED_USER"));
-        document.getElementById("name").innerTEXT = `Welcome ${user.fName} ${
-          user.lName}`;
+        let user = JSON.parse(localStorage.getItem("LOGGED_USER"));
+        document.getElementById("name").innerHTML = `Welcome ${user.fName} ${
+          user.lName
+        }`;
       }
     </script>
   </head>
-  <body>
+  <body onload="getName(); getPending();">
     <nav>
       <button onclick="logout()">Logout</button>
     </nav>
-    <h4 id="name" onload="getName()">Welcome Manager</h4>
+    <h4 id="name">Welcome Manager</h4>
     <div>
-      <table id="request">
-        
+      <h3>Requests</h3>
+      <button onclick="getPending()">See Pending</button>
+      <button onclick="getResolved()">See Resolved</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Ammount</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>empID</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="request"></tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Employees</h3>
+      <button onclick="getEmps()">Get Employees</button>
+      <table>
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody id="employees"></tbody>
       </table>
     </div>
     <script>
+      let page_emp_id = 0;
+      let ispending = false;
+      let isresolved = false;
+
       function logout() {
         console.log("logout run");
         url = "logout.do";
         ajaxGET(url, "").then(function(response) {
           localStorage.removeItem("LOGGED_USER");
-          window.location = "login.html";
+          window.location = "index.html";
         });
+      }
+
+      function getEmps() {
+        url = "getemployees.do";
+        ajaxGET(url, "").then(function(response) {
+          try {
+            let Emps = JSON.parse(response);
+            var table = document.getElementById("employees");
+            table.innerHTML = "";
+            var content = "";
+            for (let emp of Emps) {
+              var row =
+                "<tr><td>" +
+                emp.fName +
+                "</td><td>" +
+                emp.lName +
+                "</td><td>" +
+                emp.email +
+                "</td>" +
+                "<td><button onclick='getEmpReqs(" +
+                emp.id +
+                ")'>GetRequests</button></td></tr>";
+              content += row;
+            }
+            table.innerHTML = content;
+          } catch (err) {
+            alert(response);
+          }
+        });
+      }
+
+      function getEmpReqs(i) {
+        url = "getemprequests.do";
+        formData = "id=" + i;
+        ajaxGET(url, formData).then(function(response) {
+          try {
+            let reqs = JSON.parse(response);
+            fillReqTable(reqs);
+            ispending = false;
+            isresolved = false;
+            page_emp_id = i;
+          } catch (err) {
+            alert(response);
+          }
+        });
+      }
+
+      function getPending() {
+        url = "getpending.do";
+        ajaxGET(url, "").then(function(response) {
+          try {
+            let reqs = JSON.parse(response);
+            fillReqTable(reqs);
+            ispending = true;
+            isresolved = false;
+            page_emp_id = 0;
+          } catch (err) {
+            alert(response);
+          }
+        });
+      }
+
+      function getResolved() {
+        url = "getresolved.do";
+        ajaxGET(url, "").then(function(response) {
+          try {
+            let reqs = JSON.parse(response);
+            fillReqTable(reqs);
+            ispending = false;
+            isresolved = true;
+            page_emp_id = 0;
+          } catch (err) {
+            alert(response);
+          }
+        });
+      }
+
+      function resolve(id, status) {
+        let formData = "id=" + id + "&" + "status=" + status;
+        let url = "resolve.do";
+        ajaxGET(url, formData).then(function(response) {
+          alert(response);
+          if (ispending) {
+            getPending();
+          } else if (isresolved) {
+            getResolved();
+          } else if (page_emp_id > 0) {
+            getEmpReqs(page_emp_id);
+          }
+        });
+      }
+
+      function fillReqTable(reqs) {
+        var table = document.getElementById("request");
+        table.innerHTML = "";
+        var content = "";
+        for (let req of reqs) {
+          var row =
+            "<tr><td>" +
+            req.amount +
+            "</td><td>" +
+            req.reason +
+            "</td><td>" +
+            req.status +
+            "</td><td>" +
+            req.EMP_ID +
+            "</td><td>" +
+            req.time +
+            "</td>";
+          if (req.status == "PENDING") {
+            row +=
+              "<td><button onclick='resolve(" +
+              req.ID +
+              ', "DENIED")\'>Deny</button></td>' +
+              "<td><button onclick='resolve(" +
+              req.ID +
+              ', "APPROVED")\'>Approved</button></td></tr>';
+          } else {
+            row += "</tr>";
+          }
+          content += row;
+        }
+        table.innerHTML = content;
       }
     </script>
   </body>
